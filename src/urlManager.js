@@ -80,37 +80,39 @@ function onPopState() {
   })
 }
 
-if (historyIsSupported() && !window.__URLManagerStarted) {
-  window.__URLManagerStarted = true
-  if ('scrollRestoration' in history) {
-    history.scrollRestoration = 'manual'
-  }
+export function bindPopState() {
+  if (historyIsSupported() && !window.__URLManagerStarted) {
+    window.__URLManagerStarted = true
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual'
+    }
 
-  if (document.readyState == 'complete') {
-    window.addEventListener('popstate', onPopState, false)
-  } else {
-    window.addEventListener('load', function init() {
-      window.removeEventListener('load', init, false)
-      setTimeout(() => {
-        window.addEventListener('popstate', onPopState, false)
-      }, 0)
+    if (document.readyState == 'complete') {
+      window.addEventListener('popstate', onPopState, false)
+    } else {
+      window.addEventListener('load', function init() {
+        window.removeEventListener('load', init, false)
+        setTimeout(() => {
+          window.addEventListener('popstate', onPopState, false)
+        }, 0)
+      }, false)
+    }
+
+    function handleExternalChange() {
+      replace(location.href)
+      recordScroll()
+    }
+
+    window.addEventListener('hashchange', () => {
+      setTimeout(handleExternalChange, 0)
     }, false)
-  }
 
-  function handleExternalChange() {
+    window.addEventListener('unload', handleExternalChange, false)
+
     replace(location.href)
-    recordScroll()
+    queue(cb => {
+      scroll(getRecordedScroll())
+      cb()
+    })
   }
-
-  window.addEventListener('hashchange', () => {
-    setTimeout(handleExternalChange, 0)
-  }, false)
-
-  window.addEventListener('unload', handleExternalChange, false)
-
-  replace(location.href)
-  queue(cb => {
-    scroll(getRecordedScroll())
-    cb()
-  })
 }
