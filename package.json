@@ -1,6 +1,6 @@
 {
   "name": "apply-url",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Fetches a URL and applies given deltas",
   "sideEffects": false,
   "main": "./dist/applyUrl.cjs.js",
