@@ -1,6 +1,6 @@
 import { apply, queueMutex } from 'jwit'
-import getAbsoluteUrl from '../getAbsoluteUrl'
-import { toQuery, origin, path, utf8Bytes } from '../util'
+import { toQuery, utf8Bytes } from '../util'
+import createLink from 'create-link'
 
 const sockets = window.applyURLSockets = window.applyURLSockets || {}
 const INACTIVITY_TIMEOUT = 10e3
@@ -160,12 +160,12 @@ function setupSocket(wsUrl) {
           const location = headers.location[0]
           context.id = socket.nextId()
 
-          if (origin(location)) {
+          if (location.match(/^[a-z]+\:\/\//)) {
             context.url = location
           } else if (location.indexOf('/') == 0) {
-            context.url = origin(context.url) + location
+            context.url = createLink(context.url).origin + location
           } else {
-            context.url = getAbsoluteUrl(context.url.replace(/[^\/]+$/, '') + location)
+            context.url = createLink(context.url.replace(/[^\/]+$/, '') + location).href
           }
 
           if (status == 302 || status == 303) {
@@ -234,17 +234,19 @@ function setupSocket(wsUrl) {
 
 function makeRequest(context, socket) {
   const { id, url, wsUrl, method, body, headers } = context
+  const urlLink = createLink(url)
+  const wsUrlLink = createLink(wsUrl)
 
-  const cookiesAllowed = origin(wsUrl) == origin(url) && origin(wsUrl) == origin(location.href)
+  const cookiesAllowed = wsUrlLink.origin == urlLink.origin && wsUrlLink.origin == location.origin
   context.cookiesAllowed = cookiesAllowed
 
   let request = ''
   request += `REQUEST ${id}\r\n`
-  request += `${method} ${path(url)} HTTP/1.0\r\n`
+  request += `${method} ${urlLink.pathname + urlLink} HTTP/1.0\r\n`
   request += `User-Agent: ${navigator.userAgent}\r\n`
   request += `Referer: ${location.href}\r\n`
-  request += `Origin: ${origin(url)}\r\n`
-  request += `Host: ${origin(url).replace(/^[a-z]+\:\/\//, '')}\r\n`
+  request += `Origin: ${urlLink.origin}\r\n`
+  request += `Host: ${urlLink.host}\r\n`
 
   const langs = (navigator.languages || [navigator.userLanguage || navigator.language]).filter(e => !!e)
 

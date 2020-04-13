@@ -1,6 +1,6 @@
 import { queueMutex } from 'jwit'
-import getAbsoluteUrl from './getAbsoluteUrl'
-import { assign, dedupe, toQuery } from './util'
+import { dedupe, toQuery } from './util'
+import createLink from 'create-link'
 
 import triggerEvent from './triggerEvent'
 import xhrTransport from './transports/xhr'
@@ -34,7 +34,7 @@ function applyURL(options) {
   url = options.url || location.href
   fragment = (url.match(/#.*$/) || [''])[0]
   url = url.replace(/#.*$/, '')
-  url = getAbsoluteUrl(url)
+  url = createLink(url).href
 
   method = options.method || 'GET'
   headers = options.headers || {}
@@ -45,7 +45,7 @@ function applyURL(options) {
 
   wsUrl = options.wsUrl || null
   if (wsUrl) {
-    wsUrl = getAbsoluteUrl(wsUrl).replace(/^http/, 'ws')
+    wsUrl = createLink(wsUrl).href.replace(/^http/, 'ws')
   }
 
   const requestId = Math.random().toString(36).slice(-10) +
@@ -62,38 +62,38 @@ function applyURL(options) {
   const baseEventData = { url, wsUrl, method, headers, body, target, requestId }
 
   const onDone = (data) => {
-    triggerEvent('done', options, assign(data, baseEventData))
+    triggerEvent('done', options, Object.assign(data, baseEventData))
   }
 
   const onAbort = (data) => {
-    triggerEvent('abort', options, assign(data, baseEventData))
+    triggerEvent('abort', options, Object.assign(data, baseEventData))
   }
 
   const onLoading = (data) => {
-    triggerEvent('loading', options, assign(data, baseEventData))
+    triggerEvent('loading', options, Object.assign(data, baseEventData))
   }
 
   const onLoad = (data) => {
-    const result = assign(data, baseEventData)
+    const result = Object.assign(data, baseEventData)
     resolve(result)
     triggerEvent('load', options, result)
   }
 
   const onError = (data) => {
     reject(data.error)
-    triggerEvent('error', options, assign(data, baseEventData))
+    triggerEvent('error', options, Object.assign(data, baseEventData))
   }
 
   const onResponse = (data) => {
-    triggerEvent('response', options, assign(data, baseEventData))
+    triggerEvent('response', options, Object.assign(data, baseEventData))
   }
 
   const onUploadProgress = (data) => {
-    triggerEvent('uploadProgress', options, assign(data, baseEventData))
+    triggerEvent('uploadProgress', options, Object.assign(data, baseEventData))
   }
 
   const onDownloadProgress = (data) => {
-    triggerEvent('downloadProgress', options, assign(data, baseEventData))
+    triggerEvent('downloadProgress', options, Object.assign(data, baseEventData))
   }
 
   let abortReq

@@ -1,5 +1,5 @@
 import { apply } from 'jwit'
-import getAbsoluteUrl from '../getAbsoluteUrl'
+import createLink from 'create-link'
 
 export default ({
   onDownloadProgress,
@@ -44,7 +44,7 @@ export default ({
     }
 
     xhr = null
-    responseURL = getAbsoluteUrl(responseURL)
+    responseURL = createLink(responseURL).href
     onResponse({ responseURL })
 
     function afterApply() {

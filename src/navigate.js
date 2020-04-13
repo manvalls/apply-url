@@ -1,5 +1,4 @@
 import applyURL from './applyURL'
-import { assign } from './util'
 import { push, replace, historyIsSupported } from './urlManager'
 
 let cancelLastRequest
@@ -36,8 +35,8 @@ function navigate(options) {
     }
   }
 
-  return applyURL(assign({}, options, {
-    headers: assign({
+  return applyURL(Object.assign({}, options, {
+    headers: Object.assign({
       'X-Navigation': 'true',
     }, options.headers || {}),
 

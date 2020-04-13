@@ -1,15 +1,3 @@
-import getAbsoluteUrl from './getAbsoluteUrl'
-
-export function assign(base) {
-  for (let i = 1;i < arguments.length;i++) {
-    const a = arguments[i]
-    for (let key in a) if (a.hasOwnProperty(key)) {
-      base[key] = a[key]
-    }
-  }
-
-  return base
-}
 
 export function dedupe(array) {
   const result = []
@@ -61,12 +49,4 @@ export function utf8Bytes(string) {
   }
 
   return total
-}
-
-export function origin(url) {
-  return (getAbsoluteUrl(url.replace(/^ws/, 'http')).match(/^[a-z]+\:\/\/.*?(?=\/)/) || [])[0]
-}
-
-export function path(url) {
-  return url.replace(/^[a-z]+\:\/\/.*?(?=\/)/, '')
 }
