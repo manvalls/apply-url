@@ -62,24 +62,28 @@ function navigate(options) {
       }
     },
 
-    afterLoad: () => {
+    afterLoad: (e) => {
       if (location.hash) {
         location.hash = location.hash
       }
 
       if (typeof options.afterLoad == 'function') {
-        options.afterLoad()
+        options.afterLoad(e)
       }
     },
 
-    afterDone: () => {
+    afterDone: (e) => {
       cancelLastRequest = null
       if (removeListeners) {
         removeListeners()
       }
+
+      if (typeof options.afterDone == 'function') {
+        options.afterDone(e)
+      }
     },
 
-    afterError: () => {
+    afterError: (e) => {
       if (responseURL) {
         location.href = responseURL
       } else {
@@ -87,7 +91,7 @@ function navigate(options) {
       }
 
       if (typeof options.afterError == 'function') {
-        options.afterError()
+        options.afterError(e)
       }
     },
   }))
