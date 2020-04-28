@@ -108,25 +108,25 @@ function applyURL(options) {
       computedHeaders['x-request-id'] = requestId
       computedHeaders['x-requested-with'] = 'XMLHttpRequest'
 
-      if (typeof _SH !== 'undefined') {
-        const addHeaders = (_SH) => {
+      if (typeof SPASessionHeadersMap !== 'undefined') {
+        const addHeaders = (headers) => {
           var i
 
-          for (i in _SH) if (_SH.hasOwnProperty(i) && _SH[i] != null) {
-            if (typeof _SH[i] == 'string') {
-              computedHeaders[i.toLowerCase()] = _SH[i]
-            } else if (_SH[i] instanceof Array) {
-              _SH[i] = dedupe(_SH[i])
-              computedHeaders[i.toLowerCase()] = _SH[i].join(', ')
-            } else if (_SH[i].hasOwnProperty('_map') && _SH[i]._map === true) {
-              computedHeaders[i.toLowerCase()] = toQuery(_SH[i])
+          for (i in headers) if (headers.hasOwnProperty(i) && headers[i] != null) {
+            if (typeof headers[i] == 'string') {
+              computedHeaders[i.toLowerCase()] = headers[i]
+            } else if (headers[i] instanceof Array) {
+              headers[i] = dedupe(headers[i])
+              computedHeaders[i.toLowerCase()] = headers[i].join(', ')
+            } else if (headers[i].hasOwnProperty('_map') && headers[i]._map === true) {
+              computedHeaders[i.toLowerCase()] = toQuery(headers[i])
             } else {
-              addHeaders(_SH[i])
+              addHeaders(headers[i])
             }
           }
         }
 
-        addHeaders(window._SH)
+        addHeaders(window.SPASessionHeadersMap)
       }
 
       for (i in headers) if (headers.hasOwnProperty(i)) {
