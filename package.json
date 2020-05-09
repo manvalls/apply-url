@@ -2,7 +2,6 @@
   "name": "apply-url",
   "version": "4.0.1",
   "description": "Fetches a URL and applies given deltas",
-  "sideEffects": false,
   "main": "./dist/applyUrl.cjs.js",
   "module": "./dist/applyUrl.esm.js",
   "es": "./dist/applyUrl.es.js",

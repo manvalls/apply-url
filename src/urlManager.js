@@ -80,7 +80,7 @@ function onPopState() {
   })
 }
 
-export function bindPopState() {
+function bindPopState() {
   if (historyIsSupported() && !window.__URLManagerStarted) {
     window.__URLManagerStarted = true
     if ('scrollRestoration' in history) {
@@ -116,3 +116,5 @@ export function bindPopState() {
     })
   }
 }
+
+bindPopState()
