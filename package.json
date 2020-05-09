@@ -1,6 +1,6 @@
 {
   "name": "apply-url",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "description": "Fetches a URL and applies given deltas",
   "main": "./dist/applyUrl.cjs.js",
   "module": "./dist/applyUrl.esm.js",
