@@ -1,30 +1,9 @@
-import { queueMutex } from 'jwit'
-import { dedupe, toQuery } from './util'
+import { dedupe, toQuery, queue } from './util'
 import createLink from 'create-link'
 
 import triggerEvent from './triggerEvent'
 import xhrTransport from './transports/xhr'
 import wsTransport from './transports/ws'
-
-const queue = (fn) => {
-  let aborted = false
-
-  const unlocker = queueMutex.lock((unlocker) => {
-    if (aborted) {
-      return
-    }
-
-    fn(unlocker)
-  })
-
-  if (unlocker) {
-    fn(unlocker)
-  }
-
-  return () => {
-    aborted = true
-  }
-}
 
 function applyURL(options) {
   var url, wsUrl, wsEvents, fragment, method, headers, body, target, signal

@@ -1,3 +1,24 @@
+import { queueMutex } from 'jwit'
+
+export function queue(fn) {
+  let aborted = false
+
+  const unlocker = queueMutex.lock((unlocker) => {
+    if (aborted) {
+      return
+    }
+
+    fn(unlocker)
+  })
+
+  if (unlocker) {
+    fn(unlocker)
+  }
+
+  return () => {
+    aborted = true
+  }
+}
 
 export function dedupe(array) {
   const result = []

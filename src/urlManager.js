@@ -1,4 +1,4 @@
-import { queue } from 'jwit'
+import { queue } from './util'
 import navigate from './navigate'
 
 let session
