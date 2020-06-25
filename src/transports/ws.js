@@ -242,7 +242,7 @@ function makeRequest(context, socket) {
 
   let request = ''
   request += `REQUEST ${id}\r\n`
-  request += `${method} ${urlLink.pathname + urlLink} HTTP/1.0\r\n`
+  request += `${method} ${urlLink.pathname + urlLink.search} HTTP/1.0\r\n`
   request += `User-Agent: ${navigator.userAgent}\r\n`
   request += `Referer: ${location.href}\r\n`
   request += `Origin: ${urlLink.origin}\r\n`
